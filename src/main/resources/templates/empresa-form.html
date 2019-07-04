@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nova Empresa</title>
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css">
+<script defer
+	src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+</head>
+<body>
+	<nav class="navbar is-info" role="navigation"
+		aria-label="main navigation" style="padding: 20px 0;">
+		<div class="container">
+			<div class="navbar-brand" style="margin-left: 10px;">
+				<a class="navbar-item" th:href="@{/index}">
+					<h1 class="title is-4 has-text-white">
+						<i class="fas fa-building"></i> Gestão de Empresas
+					</h1>
+				</a> <a role="button" class="navbar-burger burger" aria-label="menu"
+					aria-expanded="false" data-target="navbarBasicExample"> <span
+					aria-hidden="true"></span> <span aria-hidden="true"></span> <span
+					aria-hidden="true"></span>
+				</a>
+			</div>
+
+			<div id="navbarBasicExample" class="navbar-menu"
+				style="margin-right: 50px;">
+				<div class="navbar-end">
+					<a class="navbar-item"> Home </a> <a class="navbar-item">
+						Contato </a> <a class="navbar-item"> Informações </a> <a
+						class="navbar-item"> Sobre </a>
+				</div>
+			</div>
+		</div>
+	</nav>
+	<main class="container" style="margin-top: 40px;">
+	<h1 class="title is-3 has-text-info"
+		style="margin-bottom: 2px; padding-bottom: 0;">Cadastrar Empresa</h1>
+	<hr class="has-background-info" style="margin-top: 0; padding-top: 0;">
+
+	<nav class="breadcrumb has-bullet-separator is-right" aria-label="breadcrumbs">
+		<ul>
+			<li><a th:href="@{/home}"> <span class="icon is-small">
+						<i class="fas fa-home" aria-hidden="true"></i>
+				</span> <span>Gestão de Pessoas</span>
+			</a></li>
+			<li>
+				<a href="#">Empresa</a>
+			</li>
+			<li class="is-active">
+			<a href="#">Nova</a></li>
+		</ul>
+	</nav>
+
+	<section>
+		<form th:action="@{/empresa/nova}" th:object="${empresa}" method="post" class="has-text-primary">
+			<div class="columns">
+				<div class="column">
+					<div class="field">
+						<div class="control">
+							<label>Nome</label>
+							<input class="input is-medium has-text-primary" type="text" th:field="*{nome}" placeholder="Digite o nome da empresa">
+						</div>
+					</div>
+				</div>
+				<div class="column">
+					<div class="field">
+						<div class="control">
+							<label>Nome Abreviado</label>
+							<input class="input is-medium has-text-primary" type="text" th:field="*{nomeCurto}" placeholder="Digite o nome curto da empresa">
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="columns">
+				<div class="column">
+					<div class="field">
+						<div class="control">
+							<label>Email</label>
+							<input class="input is-medium has-text-primary" type="email" th:field="*{email}" placeholder="Digite o nome da empresa ">
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="columns">
+				<div class="column">
+					<div class="control">
+						<label class="radio">
+							<input type="radio" name="answer">
+							Yes
+						</label>
+						<label class="radio">
+							<input type="radio" name="answer">
+							No
+						</label>
+					</div>
+				</div>
+				<div class="column">
+					<div class="control">
+						<label class="radio">
+							<input type="radio" name="answer">
+							Yes
+						</label>
+						<label class="radio">
+							<input type="radio" name="answer">
+							No
+						</label>
+					</div>
+				</div>
+			</div>
+			<div class="columns">
+				<div class="column">
+					
+				</div>
+			</div>
+		</form>
+	</section>
+	</main>
+</body>
+</html>
