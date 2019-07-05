@@ -5,6 +5,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @Entity
 public class Empresa {
@@ -13,20 +15,24 @@ public class Empresa {
 	@Column(name = "empresa_id")
 	private Integer id;
 
+	@Size(max = 50, message = "Informe o nome da empresa")
 	@Column(name = "empresa_nome", length = 50, nullable = false)
 	private String nome;
 
+	@Size(max = 10)
 	@Column(name = "empresa_nome_curto", length = 10)
 	private String nomeCurto;
 
+	@Size(max = 80)
 	@Column(name = "empresa_email", length = 80)
 	private String email;
 
+	@NotNull(message = "Informe se é empresa princial")
 	@Column(name = "empresa_is_principal", nullable = false)
-	private boolean is_principal;
+	private Boolean isPrincipal;
 
 	@Column(name = "empresa_situacao", nullable = false)
-	private boolean situacao = true;
+	private Boolean situacao = true;
 
 	public Integer getId() {
 		return id;
@@ -60,19 +66,19 @@ public class Empresa {
 		this.email = email;
 	}
 
-	public boolean isIs_principal() {
-		return is_principal;
+	public Boolean getIsPrincipal() {
+		return isPrincipal;
 	}
 
-	public void setIs_principal(boolean is_principal) {
-		this.is_principal = is_principal;
+	public void setIsPrincipal(Boolean isPrincipal) {
+		this.isPrincipal = isPrincipal;
 	}
 
-	public boolean isSituacao() {
+	public Boolean getSituacao() {
 		return situacao;
 	}
 
-	public void setSituacao(boolean situacao) {
+	public void setSituacao(Boolean situacao) {
 		this.situacao = situacao;
 	}
 }
