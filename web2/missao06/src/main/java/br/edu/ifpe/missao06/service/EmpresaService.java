@@ -20,7 +20,7 @@ public class EmpresaService {
 	}
 
 	public void novaEmpresa(Empresa empresa) throws ServiceException {
-		if (this.findByNome(empresa.getNome()) != null) {
+		if (!this.findByNome(empresa.getNome()).isEmpty()) {
 			throw new ServiceException("Já existe empresa com o nome informado");
 		}
 		

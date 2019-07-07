@@ -5,6 +5,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -15,7 +17,8 @@ public class Empresa {
 	@Column(name = "empresa_id")
 	private Integer id;
 
-	@Size(max = 50, message = "Informe o nome da empresa")
+	@NotBlank(message = "Informe o nome da empresa")
+	@Size(max = 50, message = "O nome da empresa não pode conter mais de 50 caracteres")
 	@Column(name = "empresa_nome", length = 50, nullable = false)
 	private String nome;
 
@@ -23,6 +26,7 @@ public class Empresa {
 	@Column(name = "empresa_nome_curto", length = 10)
 	private String nomeCurto;
 
+	@Email(message = "Email da empresa inválido")
 	@Size(max = 80)
 	@Column(name = "empresa_email", length = 80)
 	private String email;

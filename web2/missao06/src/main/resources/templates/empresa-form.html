@@ -4,6 +4,7 @@ xmlns:th="http://www.thymeleaf.org">
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="icon" th:href="@{/imagens/icon.png}">
 	<title>Nova Empresa</title>
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css">
 	<script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
@@ -68,12 +69,29 @@ xmlns:th="http://www.thymeleaf.org">
 
 	<section>
 		<form th:action="@{/empresa/nova}" th:object="${empresa}" method="post" class="has-text-blue">
+			<div th:if="${mensagemErro != null || errors != null}">
+				<article class="message is-danger">
+					<div class="message-header">
+						<p>Erro!</p>
+						<a class="delete" aria-label="delete"></a>
+					</div>
+					<div class="message-body">
+						<!-- VARIAVEL MENSAGEM ERRO -->
+						<div th:if="${mensagemErro != null}" th:text="${mensagemErro}"></div>
+
+						<!-- VARIAVEL BR -->
+						<div th:if="${errors != null}">
+							<p th:each="err : ${errors}" th:text="${err.defaultMessage}"></p>
+						</div>
+					</div>
+				</article>
+			</div>
 			<div class="columns">
 				<div class="column">
 					<div class="field">
 						<div class="control">
 							<label>Nome</label>
-							<input class="input is-medium has-text-blue" type="text" th:field="*{nome}" placeholder="Digite o nome da empresa" required="O nome da empresa é obrigatorio">
+							<input class="input is-medium has-text-blue" type="text" th:field="*{nome}" placeholder="Digite o nome da empresa" th:value="${empresa.nome}">
 						</div>
 					</div>
 				</div>
@@ -91,7 +109,7 @@ xmlns:th="http://www.thymeleaf.org">
 					<div class="field">
 						<div class="control">
 							<label>Email</label>
-							<input class="input is-medium has-text-blue" type="email" th:field="*{email}" placeholder="Digite o nome da empresa ">
+							<input class="input is-medium has-text-blue" type="email" th:field="*{email}" placeholder="Digite o nome da empresa">
 						</div>
 					</div>
 				</div>
