@@ -7,12 +7,46 @@
 	<title>Index</title>
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css">
 	<script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+
+	<link href="https://fonts.googleapis.com/css?family=Francois+One|Roboto+Mono&display=swap" rel="stylesheet">
+
+	<link rel="stylesheet" type="text/css" th:href="@{/css/style.css}">
+	<link rel="stylesheet" type="text/css" th:href="@{/css/colors.css}">
 </head>
 <body>
 	<section class="hero is-info is-fullheight">
+		<div class="hero-head">
+			<nav class="navbar" style="padding-top: 20px;">
+				<div class="container">
+					<div class="navbar-brand">
+						<a href="#" class="navbar-item">
+							<h1 class="f-francois title is-3"><i class="fas fa-building"></i> Gestão de Empresas</h1>
+						</a>
+						<span class="navbar-burger burger" data-target="navbarMenuHeroA">
+							<span></span>
+							<span></span>
+							<span></span>
+						</span>
+					</div>
+					<div id="navbarMenuHeroA" class="navbar-menu">
+						<div class="navbar-end">
+							<a class="navbar-item is-active">
+								Home
+							</a>
+							<a class="navbar-item">
+								Informações
+							</a>
+							<a class="navbar-item">
+								Sobre
+							</a>
+						</div>
+					</div>
+				</div>
+			</nav>
+		</div>
 		<div class="hero-body">
 			<div class="container">
-				<h1 class="title">Gestão de Empresas</h1>
+				<h1 class="title f-francois">Gestão de Empresas</h1>
 				<a class="button is-large is-primary" th:href="@{/empresa/nova}">Cadastrar Empresa</a>
 				<a class="button is-large is-success" th:href="@{/funcionario/novo}">Cadastrar Funcionário</a>
 			</div>
