@@ -13,7 +13,7 @@
 	<thymeleaf th:replace="fragments/head :: css"></thymeleaf>
 
 	<!-- CONFIGURAÇÕES ESPECIFICAS -->	
-	<title>Index</title>
+	<title>Home</title>
 
 	<style type="text/css">
 		nav {
@@ -31,6 +31,7 @@
 			<div class="container">
 				<h1 class="title f-francois">Gestão de Pessoas</h1>
 				<a class="button is-large is-primary" th:href="@{/empresa/listar}">Manter Empresa</a>
+				<a th:href="@{/cargo/listar}" class="button is-large is-link">Manter Cargo</a>
 				<a class="button is-large is-success" th:href="@{/funcionario/novo}">Cadastrar Funcionário</a>
 			</div>
 		</div>

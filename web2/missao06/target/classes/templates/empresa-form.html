@@ -13,14 +13,14 @@ xmlns:th="http://www.thymeleaf.org">
 	<thymeleaf th:replace="fragments/head :: css"></thymeleaf>
 
 	<!-- CONFIGURAÇÕES ESPECIFICAS -->	
-	<title>Nova Empresa</title>
+	<title th:text="${empresa.id != null ? 'Editar Empresa' : 'Nova Empresa' }"></title>
 </head>
 <body>
 	<!-- NAVBAR -->
 	<nav th:replace="fragments/navbar :: default"></nav>
 
 	<main class="container top-40">
-		<h1 class="title is-3 has-text-blue" style="margin-bottom: 2px; padding-bottom: 0;">Cadastrar Empresa</h1>
+		<h1 class="title is-3 has-text-blue" style="margin-bottom: 2px; padding-bottom: 0;" th:text="${empresa.id != null ? 'Editar Empresa' : 'Cadastrar Empresa' }"></h1>
 		<hr class="has-background-info" style="margin-top: 0; padding-top: 0;">
 
 		<nav class="breadcrumb has-bullet-separator is-right" aria-label="breadcrumbs">
@@ -131,7 +131,7 @@ xmlns:th="http://www.thymeleaf.org">
 								<span class="icon">
 									<i class="fas fa-save"></i>
 								</span>
-								<span th:text="${ (editar != null) ? 'Salvar' : 'Criar Empresa' }">Criar Empresa</span>
+								<span th:text="${ (empresa.id != null) ? 'Salvar' : 'Criar Empresa' }">Criar Empresa</span>
 							</button>
 						</div>
 					</div>
