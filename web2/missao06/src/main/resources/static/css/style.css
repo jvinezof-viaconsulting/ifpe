@@ -3,7 +3,26 @@ body {
 	font-family: 'Roboto Mono', monospace;
 }
 
+/* ## Margins ## */
+.top-20 {
+	margin-top: 20px;
+}
+
+.top-40 {
+	margin-top: 40px;
+}
+
 /* ## Fonts ## */
 .f-francois {
 	font-family: 'Francois One', sans-serif;
+}
+
+/* ## Navbar ## */
+nav {
+	padding: 20px 0;
+}
+
+/* ## Table ## */
+.table-hover tbody tr:hover {
+	background-color: hsl(204, 86%, 53%);
 }

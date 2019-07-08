@@ -1,0 +1,24 @@
+<nav th:fragment="default" class="navbar is-info" role="navigation" aria-label="main navigation">
+	<div class="container">
+		<div class="navbar-brand" style="font-family: 'Francois One', sans-serif;">
+			<a class="navbar-item" th:href="@{/index}">
+				<h1 class="title is-3 has-text-white">
+					<i class="fas fa-building"></i> Gestão de Pessoas
+				</h1>
+			</a>
+			<a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+				<span aria-hidden="true"></span>
+				<span aria-hidden="true"></span>
+				<span aria-hidden="true"></span>
+			</a>
+		</div>
+		<div id="navbarBasicExample" class="navbar-menu f-francois">
+			<div class="navbar-end">
+				<a class="navbar-item"> Home </a>
+				<a class="navbar-item"> Contato </a>
+				<a class="navbar-item"> Informações </a> 
+				<a class="navbar-item"> Sobre </a>
+			</div>
+		</div>
+	</div>
+</nav>

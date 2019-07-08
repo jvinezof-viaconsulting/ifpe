@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+	<!-- HEAD BASICO -->
+	<thymeleaf th:replace="fragments/head :: basico"></thymeleaf>
+	
+	<!-- FONTS -->
+	<thymeleaf th:replace="fragments/head :: fonts"></thymeleaf>
+
+	
+	<!-- CSS GERAL -->
+	<thymeleaf th:replace="fragments/head :: css"></thymeleaf>
+
+	<!-- CONFIGURAÇÕES ESPECIFICAS -->	
+	<title>Manter Empresa</title>
+</head>
+<body>
+	<main class="hero is-info is-medium">
+		<div class="hero-head">
+			<!-- NAVBAR -->
+			<nav th:replace="fragments/navbar :: default"></nav>
+		</div>
+		<div class="hero-body">
+			<div class="container has-text-centered">
+				<h1 class="title">
+					Manter empresa
+				</h1>
+				<div>
+					<a th:href="@{/empresa/nova}" class="button is-primary is-medium">Inserir Uma Empresa</a>
+					<button th:href="@{/empresa/filtrar}" class="button is-info is-medium modal-button" data-target="modal" aria-haspopup="true" onclick="lauch();">Filtrar Empresa</button>
+				</div>
+			</div>
+		</div>
+	</main>
+	<nav class="breadcrumb has-bullet-separator is-right" aria-label="breadcrumbs">
+		<ul>
+			<li>
+				<a th:href="@{/home}">
+					<span class="icon">
+						<i class="fas fa-home" aria-hidden="true"></i>
+					</span>
+					<span>Gestão de Pessoas</span>
+				</a>
+			</li>
+			<li class="is-active">
+				<a href="#">Empresas</a>
+			</li>
+		</ul>
+	</nav>
+
+	<section class="container">
+		<div class="columns">
+			<div class="column">
+				<h3 class="title is-4" th:text="${ (resultado != null) ? 'Resultado' : 'Empresas' }"></h3>
+				<h4 class="subtitle" th:text="${(resultado != null) ? resultado : 'Lista com 10 empresas em ordem alfabética'}" style="font-size: 1rem;"></h4>
+			</div>
+			<div th:if="${resultado != null}" class="column is-narrow">
+				<a th:href="@{/empresa/listar}" class="button is-danger">
+					<span class="icon is-smal"><i class="fas fa-times"></i></span>
+					<span>Remover Filtro</span>
+				</a>
+			</div>
+		</div>
+
+		<table class="table is-fullwidth table-hover">
+			<thead>
+				<tr>
+					<th class="has-text-centered">#</th>
+					<th>Nome</th>
+					<th>Nome Abreviado</th>
+					<th>Email</th>
+					<th>Empresa Principal</th>
+					<th>Acões</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:if="${#lists.isEmpty(empresas)}">
+					<td colspan="6" class="has-text-centered">
+						<h3 class="title is-4">Nenhuma empresa encontrada</h3>
+					</td>
+				</tr>
+				<form th:if="${#lists.isEmpty(empresas) == false}" id="excluir-form" th:action="@{/empresa/excluir/varios}" method="post">
+					<tr th:each="empresa : ${empresas}">
+						<td class="has-text-centered">
+							<input class="checkbox" type="checkbox" name="selecionados" th:value="${empresa.id}">
+						</td>
+						<td th:text="${empresa.nome}"></td>
+						<td th:text="${empresa.nomeCurto}"></td>
+						<td th:text="${empresa.email}"></td>
+						<td th:text="${ (empresa.isPrincipal) ? 'Sim' : 'Não' }"></td>
+						<td>
+							<a th:href="@{|/empresa/editar/${empresa.id}|}" class="button is-link" title="Editar Empresa">
+								<span class="icon is-small"><i class="fas fa-edit"></i></span>
+							</a>
+							<button th:data-link="|/empresa/excluir/${empresa.id}|" th:data-id="${empresa.id}" th:data-nome="${empresa.nome}" class="button is-danger" onclick="temCertezaDialogUm(this.getAttribute('data-link'), this.getAttribute('data-nome'))" title="Excluir Empresa">
+								<span class="icon is-small">
+									<i class="fas fa-trash"></i>
+								</span>
+							</button>
+						</td>
+					</tr>
+				</form>
+			</tbody>
+			<tfoot th:if="${#lists.isEmpty(empresas) == false}">
+				<tr>
+					<td class="has-text-centered">
+						<button id="btnExcluir" class="button is-danger" onclick="temCertezaDialogVarios();" title="Excluir Selecionados" disabled>
+						<span class="icon is-small"><i class="fas fa-trash"></i></span>
+						</button>
+					</td>
+					<td th:if="${resultado == null}"><strong>Não listados:</strong> <span th:text="${naoListados}"></span></td>				
+				</tr>
+			</tfoot>
+		</table>
+	</section>
+
+	<!-- Modal Filtrar -->
+	<div id="modal" class="modal">
+		<div class="modal-background has-background-info"></div>
+		<div class="modal-card">
+			<header class="modal-card-head">
+				<p class="modal-card-title">Filtrar Empresas</p>
+				<button class="delete" aria-label="close" onclick="unlauch()"></button>
+			</header>
+			<section class="modal-card-body">
+				<form th:action="@{/empresa/filtrar}" method="post">
+					<div class="columns">
+						<div class="column">
+							<div class="field">
+								<label for="pesquisa">Pesquisar por Nome ou Nome Abreviado</label>
+								<div class="control has-icons-left">
+									<input class="input is-medium" type="text" name="pesquisa" placeholder="Digite o Nome da Empresa ou o Nome Abreviado" required>
+									<span class="icon is-left">
+										<i class="fas fa-search"></i>
+									</span>
+								</div>
+							</div>
+						</div>
+						<div class="column is-narrow">
+							<div class="field" style="margin-top: 24px;">
+								<div class="control">
+									<input type="submit" class="button is-success is-medium" value="Pesquisar">
+								</div>
+							</div>
+						</div>
+					</div>
+				</form>
+			</section>
+		</div>
+	</div>
+
+	<!-- Scripts -->
+	<script th:replace="fragments/scripts :: sweetalert2"></script>
+
+	<!-- Alerts -->
+	<script th:if="${alertErro != null}" type="text/javascript">
+		Swal.fire(
+			'Ops!',
+			'[[${alertErro}]]',
+			'error'
+			);
+	</script>
+
+	<script th:if="${alertSucesso != null}" type="text/javascript">
+		Swal.fire(
+			'Sucesso!',
+			'[[${alertSucesso}]]',
+			'success'
+			);
+	</script>
+
+	<!-- script -->
+	<script type="text/javascript">
+		var selecionados = 0;
+		var btnExcluir = document.getElementById("btnExcluir");
+		var checkboxs = document.getElementsByClassName("checkbox");
+
+		for (var i = 0; i < checkboxs.length; i++) {
+			checkboxs[i].addEventListener("click", function() {
+				if (this.checked == true) {
+					this.classList.add("marcado");
+					btnExcluir.disabled = false;
+					selecionados++;
+				} else {
+					this.classList.remove("marcado");
+					selecionados--;
+					if (document.getElementsByClassName("marcado").length == 0) {
+						btnExcluir.disabled = true;
+					}
+				}
+			});
+		}
+
+		function enviar() {
+			var form = document.getElementById("excluir-form");
+			form.submit();
+		}
+
+		function temCertezaDialogVarios() {
+			Swal.fire({
+				title: 'Você tem certeza?',
+				text: 'Se você excluir as ' + selecionados + ' empresas selecionadas não poderá recuperá-las depois',
+				type: 'warning',
+				showCancelButton: true,
+				confirmButtonColor: 'hsl(348, 100%, 61%)',
+				cancelButtonColor: 'hsl(141, 71%, 48%)',
+				confirmButtonText: '<i class="fas fa-trash" style="margin-right: 5px;"></i> Sim, excluir!',
+				cancelButtonText: 'Cancelar, não apague!'
+			}).then((result) => {
+				if (result.value) {
+					enviar();
+				} else if (result.dismiss === Swal.DismissReason.cancel) {
+					return false;
+				}
+			});
+		}
+
+		function temCertezaDialogUm(link, nome) {
+			Swal.fire({
+				title: 'Você tem certeza?',
+				text: 'Se você excluir a empresa: ' + nome + ', não poderá recuperá-la depois',
+				type: 'warning',
+				showCancelButton: true,
+				confirmButtonColor: 'hsl(348, 100%, 61%)',
+				cancelButtonColor: 'hsl(141, 71%, 48%)',
+				confirmButtonText: '<i class="fas fa-trash" style="margin-right: 5px;"></i> Sim, excluir!',
+				cancelButtonText: 'Cancelar, não apague!'
+			}).then((result) => {
+				if (result.value) {
+					window.location = link;
+				}
+			});
+		}
+
+		
+		function lauch() {
+			var modal = document.getElementById("modal");
+			modal.classList.add("is-active", "is-clipped");
+		}
+
+		function unlauch() {
+			var modal = document.getElementById("modal");
+			modal.classList.remove("is-active", "is-clipped");
+		}
+	</script>
+
+	<!-- Footer -->
+	<footer th:replace="fragments/footer :: footer"></footer>
+</body>
+</html>
