@@ -16,27 +16,11 @@
 	<title>Manter Empresa</title>
 </head>
 <body>
-	<main class="hero is-info is-medium">
-		<div class="hero-head">
-			<!-- NAVBAR -->
-			<nav th:replace="fragments/navbar :: default"></nav>
-		</div>
-		<div class="hero-body">
-			<div class="container has-text-centered">
-				<h1 class="title">
-					Manter empresa
-				</h1>
-				<div>
-					<a th:href="@{/empresa/nova}" class="button is-primary is-medium">Inserir Uma Empresa</a>
-					<button th:href="@{/empresa/filtrar}" class="button is-info is-medium modal-button" data-target="modal" aria-haspopup="true" onclick="lauch();">Filtrar Empresa</button>
-				</div>
-			</div>
-		</div>
-	</main>
+	<main th:insert="~{fragments/hero :: medium(title = 'Manter Empresa', btn1 = ${ {'/empresa/nova', 'Inserir Uma Empresa'} }, btn2 = 'Filtrar Empresa')}"></main>
 	<nav class="breadcrumb has-bullet-separator is-right" aria-label="breadcrumbs">
 		<ul>
 			<li>
-				<a th:href="@{/home}">
+				<a th:href="@{/}">
 					<span class="icon">
 						<i class="fas fa-home" aria-hidden="true"></i>
 					</span>
@@ -93,11 +77,11 @@
 							<a th:href="@{|/empresa/editar/${empresa.id}|}" class="button is-link" title="Editar Empresa">
 								<span class="icon is-small"><i class="fas fa-edit"></i></span>
 							</a>
-							<button th:data-link="|/empresa/excluir/${empresa.id}|" th:data-id="${empresa.id}" th:data-nome="${empresa.nome}" class="button is-danger" onclick="temCertezaDialogUm(this.getAttribute('data-link'), this.getAttribute('data-nome'))" title="Excluir Empresa">
+							<a th:data-link="|/empresa/excluir/${empresa.id}|" th:data-id="${empresa.id}" th:data-nome="${empresa.nome}" class="button is-danger" onclick="temCertezaDialogUm(this.getAttribute('data-link'), this.getAttribute('data-nome'))" title="Excluir Empresa">
 								<span class="icon is-small">
 									<i class="fas fa-trash"></i>
 								</span>
-							</button>
+							</a>
 						</td>
 					</tr>
 				</form>

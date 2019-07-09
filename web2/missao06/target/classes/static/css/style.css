@@ -1,4 +1,8 @@
 /* ## Reset ## */
+html, body {
+	min-height: 100vh;
+}
+
 body {
 	font-family: 'Roboto Mono', monospace;
 }

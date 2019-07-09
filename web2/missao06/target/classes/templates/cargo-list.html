@@ -16,27 +16,11 @@
 	<title>Manter Cargo</title>
 </head>
 <body>
-	<main class="hero is-info is-medium">
-		<div class="hero-head">
-			<!-- NAVBAR -->
-			<nav th:replace="fragments/navbar :: default"></nav>
-		</div>
-		<div class="hero-body">
-			<div class="container has-text-centered">
-				<h1 class="title">
-					Manter cargo
-				</h1>
-				<div>
-					<a th:href="@{/cargo/novo}" class="button is-primary is-medium">Inserir Um Cargo</a>
-					<button th:href="@{/cargo/filtrar}" class="button is-info is-medium modal-button" data-target="modal" aria-haspopup="true" onclick="lauch();">Filtrar Cargo</button>
-				</div>
-			</div>
-		</div>
-	</main>
+	<main th:insert="~{fragments/hero :: medium(title = 'Manter Cargo', btn1 = ${ {'/cargo/novo', 'Inserir Um Cargo'} }, btn2 = 'Filtrar Cargo')}"></main>
 	<nav class="breadcrumb has-bullet-separator is-right" aria-label="breadcrumbs">
 		<ul>
 			<li>
-				<a th:href="@{/home}">
+				<a th:href="@{/}">
 					<span class="icon">
 						<i class="fas fa-home" aria-hidden="true"></i>
 					</span>
@@ -68,9 +52,9 @@
 				<tr>
 					<th class="has-text-centered">#</th>
 					<th>Nome</th>
-					<th>Nome Abreviado</th>
-					<th>Email</th>
-					<th>Cargo Principal</th>
+					<th>Descrição</th>
+					<th>Descrição Curta</th>
+					<th>Situação</th>
 					<th>Acões</th>
 				</tr>
 			</thead>
@@ -86,18 +70,18 @@
 							<input class="checkbox" type="checkbox" name="selecionados" th:value="${cargo.id}">
 						</td>
 						<td th:text="${cargo.nome}"></td>
-						<td th:text="${cargo.nomeCurto}"></td>
-						<td th:text="${cargo.email}"></td>
-						<td th:text="${ (cargo.isPrincipal) ? 'Sim' : 'Não' }"></td>
+						<td th:text="${cargo.descricao}"></td>
+						<td th:text="${cargo.descricaoCurta}"></td>
+						<td th:text="${cargo.situacao == true ? 'Ativo' : 'Inativo'}"></td>
 						<td>
 							<a th:href="@{|/cargo/editar/${cargo.id}|}" class="button is-link" title="Editar Cargo">
 								<span class="icon is-small"><i class="fas fa-edit"></i></span>
 							</a>
-							<button th:data-link="|/cargo/excluir/${cargo.id}|" th:data-id="${cargo.id}" th:data-nome="${cargo.nome}" class="button is-danger" onclick="temCertezaDialogUm(this.getAttribute('data-link'), this.getAttribute('data-nome'))" title="Excluir Cargo">
+							<a th:data-link="|/cargo/excluir/${cargo.id}|" th:data-id="${cargo.id}" th:data-nome="${cargo.descricao}" class="button is-danger" onclick="temCertezaDialogUm(this.getAttribute('data-link'), this.getAttribute('data-nome'))" title="Excluir Cargo">
 								<span class="icon is-small">
 									<i class="fas fa-trash"></i>
 								</span>
-							</button>
+							</a>
 						</td>
 					</tr>
 				</form>
@@ -128,9 +112,9 @@
 					<div class="columns">
 						<div class="column">
 							<div class="field">
-								<label for="pesquisa">Pesquisar por Nome ou Nome Abreviado</label>
+								<label for="pesquisa">Pesquisar por Nome</label>
 								<div class="control has-icons-left">
-									<input class="input is-medium" type="text" name="pesquisa" placeholder="Digite o Nome da cargo ou o Nome Abreviado" required>
+									<input class="input is-medium" type="text" name="pesquisa" placeholder="Digite o nome aproximado do cargo" required>
 									<span class="icon is-left">
 										<i class="fas fa-search"></i>
 									</span>
@@ -200,7 +184,7 @@
 		function temCertezaDialogVarios() {
 			Swal.fire({
 				title: 'Você tem certeza?',
-				text: 'Se você excluir as ' + selecionados + ' cargos selecionadas não poderá recuperá-las depois',
+				text: 'Se você excluir as ' + selecionados + ' cargos selecionados não poderá recuperá-las depois',
 				type: 'warning',
 				showCancelButton: true,
 				confirmButtonColor: 'hsl(348, 100%, 61%)',
@@ -216,10 +200,10 @@
 			});
 		}
 
-		function temCertezaDialogUm(link, nome) {
+		function temCertezaDialogUm(link, descricao) {
 			Swal.fire({
 				title: 'Você tem certeza?',
-				text: 'Se você excluir a cargo: ' + nome + ', não poderá recuperá-la depois',
+				text: 'Se você excluir a cargo: ' + descricao + ', não poderá recuperá-la depois',
 				type: 'warning',
 				showCancelButton: true,
 				confirmButtonColor: 'hsl(348, 100%, 61%)',

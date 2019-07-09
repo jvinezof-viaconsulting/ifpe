@@ -1,6 +1,6 @@
 package br.edu.ifpe.missao06.controller;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -48,12 +48,8 @@ public class EmpresaController {
 
 		Map<String, ?> inputFlashMap = RequestContextUtils.getInputFlashMap(request);
 		if (inputFlashMap != null) {
-			@SuppressWarnings("unchecked")
-			ArrayList<Empresa> empresas = (ArrayList<Empresa>) inputFlashMap.get("empresas");
-			String resultado = (String) inputFlashMap.get("resultado");
-			
-			mv.addObject("empresas", empresas);
-			mv.addObject("resultado", resultado);
+			mv.addObject("empresas", inputFlashMap.get("empresas"));
+			mv.addObject("resultado", inputFlashMap.get("resultado"));
 		} else {
 			mv.setViewName("redirect:/empresa/listar");
 		}
@@ -62,21 +58,16 @@ public class EmpresaController {
 	}
 	
 	@PostMapping("/filtrar")
-	public ModelAndView filtrarEmpresas(@RequestParam(name = "pesquisa") String pesquisa, RedirectAttributes ra) {
-		ModelAndView mv = new ModelAndView("redirect:/empresa/filtrar");
-
-		ArrayList<Empresa> empresas = (ArrayList<Empresa>) this.empresaService.filterByNomeNomeCurto(pesquisa);
-		System.out.println(empresas.size());
+	public String filtrarEmpresas(@RequestParam(name = "pesquisa") String pesquisa, RedirectAttributes ra) {
+		List<Empresa> empresas = this.empresaService.filterByNomeNomeCurto(pesquisa);
 		if (empresas.size() == 1) {
-			mv.setViewName("redirect:/empresa/editar/" + empresas.get(0).getId());
-			
-			return mv;
+			return "redirect:/empresa/editar/" + empresas.get(0).getId();
 		}
 
 		ra.addFlashAttribute("empresas", empresas);
 		ra.addFlashAttribute("resultado", "Exibindo resultados para pesquisa: " + pesquisa);
 		
-		return mv;
+		return "redirect:/empresa/filtrar";
 	}
 
 	/*
@@ -145,22 +136,20 @@ public class EmpresaController {
 	public ModelAndView editarEmpresa(@PathVariable String codigo, RedirectAttributes ra) {
 		ModelAndView mv = new ModelAndView("redirect:/empresa/listar");
 		
-		Integer id = -1;
+		Integer id = null;
 		try {
 			 id = Integer.parseInt(codigo);
 		} catch (NumberFormatException e) {
 			ra.addFlashAttribute("alertErro", "Você tentou editar uma Empresa invalida");
+
+			return mv;
 		}
 
-		if (id > 0) {
-			Empresa empresa = this.empresaService.findById(id);
-			if (empresa != null) {
-				mv.setViewName("/empresa-form");
-				mv.addObject("empresa", empresa);
-				mv.addObject("editar", true);
-			} else {
-				ra.addFlashAttribute("alertErro", "Você tentou editar uma Empresa invalida");
-			}
+		Empresa empresa = this.empresaService.findById(id);
+		if (empresa != null) {
+			mv.setViewName("/empresa-form");
+			mv.addObject("empresa", empresa);
+			mv.addObject("editar", true);
 		} else {
 			ra.addFlashAttribute("alertErro", "Você tentou editar uma Empresa invalida");
 		}
@@ -173,22 +162,20 @@ public class EmpresaController {
 	*/
 	@GetMapping("/excluir/{codigo}")
 	public String deletarUm(@PathVariable String codigo, RedirectAttributes ra) {
-		Integer id = -1;
 
+		Integer id = null;
 		try {
 			 id = Integer.parseInt(codigo);
 		} catch (NumberFormatException e) {
 			ra.addFlashAttribute("alertErro", "Você tentou excluir uma Empresa invalida");
+			
+			return "redirect:/empresa/listar";
 		}
 
-		if (id > 0) {
-			Empresa empresa = this.empresaService.findById(id);
-			if (empresa != null) {
-				this.empresaService.deleteById(id);
-				ra.addFlashAttribute("alertSucesso", "Empresa [" + empresa.getNome() + "] excluida com sucesso");
-			} else {
-				ra.addFlashAttribute("alertErro", "Você tentou excluir uma Empresa invalida");
-			}
+		Empresa empresa = this.empresaService.findById(id);
+		if (empresa != null) {
+			this.empresaService.deleteById(id);
+			ra.addFlashAttribute("alertSucesso", "Empresa [" + empresa.getNome() + "] excluida com sucesso");
 		} else {
 			ra.addFlashAttribute("alertErro", "Você tentou excluir uma Empresa invalida");
 		}
@@ -198,17 +185,16 @@ public class EmpresaController {
 	
 	@PostMapping("/excluir/varios")
 	public String deletarVarios(@RequestParam(value = "selecionados", required = true) String[] selecionados, RedirectAttributes ra) {
-		Integer id = -1;
-
 		StringBuilder alertMessage = new StringBuilder();
 		for(String s : selecionados) {
+			Integer id = null;
 			try {
 				 id = Integer.parseInt(s);
 			} catch (NumberFormatException e) {
 				alertMessage.append("Você tentou excluir uma Empresa invalida.");
 			}
 
-			if (id > 0) {
+			if (id != null) {
 				Empresa empresa = this.empresaService.findById(id);
 				if (empresa != null) {
 					this.empresaService.deleteById(id);
@@ -216,8 +202,6 @@ public class EmpresaController {
 				} else {
 					alertMessage.append("Você tentou excluir uma Empresa invalida.");
 				}
-			} else {
-				alertMessage.append("Você tentou excluir uma Empresa invalida.");
 			}
 		}
 		ra.addFlashAttribute("alertSucesso", alertMessage);

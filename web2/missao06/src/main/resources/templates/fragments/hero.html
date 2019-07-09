@@ -1,0 +1,27 @@
+<div class="hero is-info" th:fragment="small(title)">
+	<div class="hero-head">
+		<!-- NAVBAR -->
+		<nav th:replace="fragments/navbar :: default"></nav>
+	</div>
+	<div class="hero-body">
+		<div class="container has-text-centered">
+			<h1 class="title" th:text="${title}"></h1>
+		</div>
+	</div>
+</div>
+
+<main xmlns:th="http://www.thymeleaf.org" class="hero is-info is-medium" th:fragment="medium(title, btn1, btn2)">
+		<div class="hero-head">
+			<!-- NAVBAR -->
+			<nav th:replace="fragments/navbar :: default"></nav>
+		</div>
+		<div class="hero-body">
+			<div class="container has-text-centered">
+				<h1 class="title" th:text="${title}"></h1>
+				<div th:if="${btn1 != null && btn2 != null}">
+					<a th:href="@{${btn1[0]}}" class="button is-primary is-medium" th:text="${btn1[1]}"></a>
+					<button class="button is-info is-medium modal-button" data-target="modal" aria-haspopup="true" onclick="lauch();" th:text="${btn2}"></button>
+				</div>
+			</div>
+		</div>
+	</main>

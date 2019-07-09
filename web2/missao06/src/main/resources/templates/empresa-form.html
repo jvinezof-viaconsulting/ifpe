@@ -14,18 +14,21 @@ xmlns:th="http://www.thymeleaf.org">
 
 	<!-- CONFIGURAÇÕES ESPECIFICAS -->	
 	<title th:text="${empresa.id != null ? 'Editar Empresa' : 'Nova Empresa' }"></title>
+	<style>
+		footer {
+			position: absolute;
+			bottom: 0;
+			left: 0;
+			width: 100%;
+		}
+	</style>
 </head>
 <body>
-	<!-- NAVBAR -->
-	<nav th:replace="fragments/navbar :: default"></nav>
-
-	<main class="container top-40">
-		<h1 class="title is-3 has-text-blue" style="margin-bottom: 2px; padding-bottom: 0;" th:text="${empresa.id != null ? 'Editar Empresa' : 'Cadastrar Empresa' }"></h1>
-		<hr class="has-background-info" style="margin-top: 0; padding-top: 0;">
-
+	<main th:insert="fragments/hero :: small(${empresa.id != null ? 'Editar Empresa' : 'Nova Empresa'})"></main>
+	<div class="container">
 		<nav class="breadcrumb has-bullet-separator is-right" aria-label="breadcrumbs">
 			<ul>
-				<li><a th:href="@{/home}"> <span class="icon">
+				<li><a th:href="@{/}"> <span class="icon">
 					<i class="fas fa-home" aria-hidden="true"></i>
 				</span> <span>Gestão de Pessoas</span>
 			</a></li>
@@ -40,11 +43,11 @@ xmlns:th="http://www.thymeleaf.org">
 		<section>
 			<form th:action="@{(${editar != null}) ? '/empresa/salvar' : '/empresa/nova'}" th:object="${empresa}" method="post" id="empresa-form" class="has-text-blue">
 				<!-- Erros -->
-				<div th:if="${mensagemErro != null || errors != null}">
+				<div id="erroDiv" th:if="${mensagemErro != null || errors != null}">
 					<article class="message is-danger">
 						<div class="message-header">
 							<p>Erro!</p>
-							<a class="delete" aria-label="delete"></a>
+							<a class="delete" aria-label="delete" id="erroBtnDelete"></a>
 						</div>
 						<div class="message-body">
 							<!-- VARIAVEL MENSAGEM ERRO -->
@@ -67,7 +70,7 @@ xmlns:th="http://www.thymeleaf.org">
 						<div class="field">
 							<div class="control">
 								<label>Nome</label>
-								<input class="input is-medium has-text-blue" type="text" th:field="*{nome}" placeholder="Digite o nome da empresa" th:value="${empresa.nome}">
+								<input class="input is-medium has-text-blue" type="text" th:field="*{nome}" placeholder="Digite o nome da empresa">
 							</div>
 						</div>
 					</div>
@@ -136,46 +139,52 @@ xmlns:th="http://www.thymeleaf.org">
 						</div>
 					</div>
 				</div>
-			</form>
-			<hr class="has-background-info">
-
-			<!-- Scripts -->
-			<script th:replace="fragments/scripts :: sweetalert2"></script>
-
-			<script>
-				var form = document.getElementById("empresa-form");
-				var id = "[[${empresa.id}]]";
-				if (id != "") {
-					var nome = "[[${empresa.nome}]]";
-
-					function temCertezaDialog() {
-						Swal.fire({
-							title: 'Você tem certeza?',
-							text: 'Se editar a empresa: ' + nome + ', não poderá reverter depois.',
-							type: 'warning',
-							showCancelButton: true,
-							confirmButtonColor: 'hsl(141, 71%, 48%)',
-							cancelButtonColor: 'hsl(348, 100%, 61%)',
-							confirmButtonText: '<i class="fas fa-check" style="margin-right: 5px;"></i> Sim, salvar!',
-							cancelButtonText: 'Cancelar'
-						}).then((result) => {
-							if (result.value) {
-								form.submit();
-							} else if (result.dismiss === Swal.DismissReason.cancel) {
-								return false;
-							}
-						});
-					}
-				} else {
-					var nome = "";
-					function temCertezaDialog(form, nome) {
-						form.submit();
-					}
-				}
-			</script>
-
-			<footer th:replace="fragments/footer :: footer"></footer>
+			</form>	
 		</section>
-	</main>
+	</div>
+
+	<!-- Footer -->
+	<footer th:replace="fragments/footer :: footer"></footer>
+
+	<!-- Scripts -->
+	<script th:replace="fragments/scripts :: sweetalert2"></script>
+
+	<script>
+		var form = document.getElementById("empresa-form");
+		var id = "[[${empresa.id}]]";
+		if (id != "") {
+			var nome = "[[${empresa.nome}]]";
+
+			function temCertezaDialog() {
+				Swal.fire({
+					title: 'Você tem certeza?',
+					text: 'Se editar a empresa: ' + nome + ', não poderá reverter depois.',
+					type: 'warning',
+					showCancelButton: true,
+					confirmButtonColor: 'hsl(141, 71%, 48%)',
+					cancelButtonColor: 'hsl(348, 100%, 61%)',
+					confirmButtonText: '<i class="fas fa-check" style="margin-right: 5px;"></i> Sim, salvar!',
+					cancelButtonText: 'Cancelar'
+				}).then((result) => {
+					if (result.value) {
+						form.submit();
+					} else if (result.dismiss === Swal.DismissReason.cancel) {
+						return false;
+					}
+				});
+			}
+		} else {
+			function temCertezaDialog() {
+				form.submit();
+			}
+		}
+
+		var btnClose = document.getElementById("erroBtnDelete");
+		if (btnClose != null) {
+			btnClose.addEventListener("click", function() {
+				document.getElementById("erroDiv").style.display = "none";
+			});
+		}
+	</script>
 </body>
 </html>

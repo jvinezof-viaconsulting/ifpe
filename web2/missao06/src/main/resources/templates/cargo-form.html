@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+xmlns:th="http://www.thymeleaf.org">
+<head>
+	<!-- HEAD BASICO -->
+	<thymeleaf th:replace="fragments/head :: basico"></thymeleaf>
+	
+	<!-- FONTS -->
+	<thymeleaf th:replace="fragments/head :: fonts"></thymeleaf>
+
+	
+	<!-- CSS GERAL -->
+	<thymeleaf th:replace="fragments/head :: css"></thymeleaf>
+
+	<!-- CONFIGURAÇÕES ESPECIFICAS -->	
+	<title th:text="${ (cargo.id != null) ? 'Editar Cargo' : 'Novo Cargo' }"></title>
+</head>
+<body>
+	<main th:insert="fragments/hero :: small(${(cargo.id != null) ? 'Editar Cargo' : 'Novo Cargo'})"></main>
+	<div class="container">
+		<nav class="breadcrumb has-bullet-separator is-right" aria-label="breadcrumbs">
+			<ul>
+				<li><a th:href="@{/}"> <span class="icon">
+					<i class="fas fa-home" aria-hidden="true"></i>
+				</span> <span>Gestão de Pessoas</span>
+			</a></li>
+			<li>
+				<a th:href="@{/cargo/listar}">Cargos</a>
+			</li>
+			<li class="is-active">
+				<a href="#" th:text="${ (editar != null) ? 'Editar' : 'Novo' }"></a></li>
+			</ul>
+		</nav>
+
+		<section>
+			<form th:action="@{(${editar != null}) ? '/cargo/salvar' : '/cargo/novo'}" th:object="${cargo}" method="post" id="cargo-form" class="has-text-blue">
+				<!-- Erros -->
+				<div id="erroDiv" th:if="${mensagemErro != null || errors != null}">
+					<article class="message is-danger">
+						<div class="message-header">
+							<p>Erro!</p>
+							<a class="delete" aria-label="delete" id="erroBtnDelete"></a>
+						</div>
+						<div class="message-body">
+							<!-- VARIAVEL MENSAGEM ERRO -->
+							<div th:if="${mensagemErro != null}" th:text="${mensagemErro}"></div>
+
+							<!-- VARIAVEL BR -->
+							<div th:if="${errors != null}">
+								<p th:each="err : ${errors}" th:text="${err.defaultMessage}"></p>
+							</div>
+						</div>
+					</article>
+				</div>
+
+				<!-- INPUT HIDDEN -->
+				<input type="hidden" th:field="*{id}">
+
+				<!-- INPUTS -->
+				<div class="field">
+					<div class="control">
+						<label>Nome</label>
+						<input id="nome" class="input is-medium has-text-blue" type="text" th:field="*{nome}" placeholder="Digite o nome do cargo">
+					</div>
+				</div>
+				<div class="field">
+					<div class="control">
+						<label>Descrição</label>
+						<textarea class="textarea is-medium has-fixed-size has-text-blue" th:field="*{descricao}" placeholder="Digite o descrição curta do cargo"></textarea>
+					</div>
+				</div>
+				<div class="field">
+					<div class="control">
+						<label>Descrição Abreviada</label>
+						<textarea class="textarea is-medium has-fixed-size has-text-blue" th:field="*{descricaoCurta}" placeholder="Digite a descrição abreviada do cargo"></textarea>
+					</div>
+				</div>
+				<div class="control">
+					<label for="situacao" style="margin-right: 20px;">Situação</label>
+					<label class="radio">
+						<input type="radio" name="situacao" th:field="*{situacao}" value="true" checked>
+						Ativo
+					</label>
+					<label class="radio">
+						<input type="radio" name="situacao" th:field="*{situacao}" value="false">
+						Inativo
+					</label>
+				</div>
+				<div style="text-align: center; margin-top: 20px;">
+					<a th:href="@{/cargo/listar}" class="button is-danger is-medium">
+						<span class="icon">
+							<i class="fas fa-times"></i>
+						</span>
+						<span>Cancelar</span>
+					</a>
+					<button onclick="temCertezaDialog();return(false)" type="submit" class="button is-success is-medium">
+						<span class="icon">
+							<i class="fas fa-save"></i>
+						</span>
+						<span th:text="${ (cargo.id != null) ? 'Salvar' : 'Criar Cargo' }"></span>
+					</button>
+				</div>
+			</form>	
+		</section>
+	</div>
+
+	<!-- Footer -->
+	<footer th:replace="fragments/footer :: footer"></footer>
+
+	<!-- Scripts -->
+	<script th:replace="fragments/scripts :: sweetalert2"></script>
+
+	<script>
+		var form = document.getElementById("cargo-form");
+		var id = "[[${cargo.id}]]";
+		if (id != "") {
+			var nome = "[[${cargo.nome}]]";
+
+			function temCertezaDialog() {
+				Swal.fire({
+					title: 'Você tem certeza?',
+					text: 'Se editar o cargo: ' + nome + ', não poderá reverter depois.',
+					type: 'warning',
+					showCancelButton: true,
+					confirmButtonColor: 'hsl(141, 71%, 48%)',
+					cancelButtonColor: 'hsl(348, 100%, 61%)',
+					confirmButtonText: '<i class="fas fa-check" style="margin-right: 5px;"></i> Sim, salvar!',
+					cancelButtonText: 'Cancelar'
+				}).then((result) => {
+					if (result.value) {
+						form.submit();
+					} else if (result.dismiss === Swal.DismissReason.cancel) {
+						return false;
+					}
+				});
+			}
+		} else {
+			function temCertezaDialog() {
+				Swal.fire({
+					title: 'Você tem certeza?',
+					text: 'Você está criando o cargo: ' + document.getElementById("nome").value,
+					type: 'warning',
+					showCancelButton: true,
+					confirmButtonColor: 'hsl(141, 71%, 48%)',
+					cancelButtonColor: 'hsl(348, 100%, 61%)',
+					confirmButtonText: '<i class="fas fa-check" style="margin-right: 5px;"></i> Sim, salvar!',
+					cancelButtonText: 'Cancelar'
+				}).then((result) => {
+					if (result.value) {
+						form.submit();
+					} else if (result.dismiss === Swal.DismissReason.cancel) {
+						return false;
+					}
+				});
+			}
+		}
+
+		var btnClose = document.getElementById("erroBtnDelete");
+		if (btnClose != null) {
+			btnClose.addEventListener("click", function() {
+				document.getElementById("erroDiv").style.display = "none";
+			});
+		}
+	</script>
+</body>
+</html>

@@ -51,7 +51,7 @@ public class EmpresaService {
 		this.empresaRep.deleteById(id);
 	}
 	
-	/* ## OTHERS ## */
+	/* ## UTILS ## */
 	public int naoListadosPorNomeTop10() {
 		int count = (int) this.empresaRep.count() - 10;
 
