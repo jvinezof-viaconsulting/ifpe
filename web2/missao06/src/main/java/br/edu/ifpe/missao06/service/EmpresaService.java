@@ -3,7 +3,9 @@ package br.edu.ifpe.missao06.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import br.edu.ifpe.missao06.DAO.EmpresaDAO;
@@ -17,6 +19,19 @@ public class EmpresaService {
 	private EmpresaDAO empresaRep;
 
 	/* ## FINDS ## */
+	public List<Empresa> findAll() {
+		return this.empresaRep.findAll(Sort.by("nome"));
+	}
+	
+	public List<Empresa> findAllActive() {
+		Empresa EmpresaExemplo = new Empresa();
+		EmpresaExemplo.setSituacao(true);
+		
+		Example<Empresa> example = Example.of(EmpresaExemplo);
+		
+		return this.empresaRep.findAll(example, Sort.by("nome"));
+	}
+	
 	public Empresa findById(Integer id) {
 		return this.empresaRep.getById(id);
 	}

@@ -16,10 +16,11 @@ xmlns:th="http://www.thymeleaf.org">
 	<title th:text="${empresa.id != null ? 'Editar Empresa' : 'Nova Empresa' }"></title>
 	<style>
 		footer {
-			position: absolute;
+			position: relative;
 			bottom: 0;
 			left: 0;
 			width: 100%;
+			padding-top: 5%;
 		}
 	</style>
 </head>
@@ -177,13 +178,6 @@ xmlns:th="http://www.thymeleaf.org">
 			function temCertezaDialog() {
 				form.submit();
 			}
-		}
-
-		var btnClose = document.getElementById("erroBtnDelete");
-		if (btnClose != null) {
-			btnClose.addEventListener("click", function() {
-				document.getElementById("erroDiv").style.display = "none";
-			});
 		}
 	</script>
 </body>

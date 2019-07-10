@@ -93,7 +93,7 @@ xmlns:th="http://www.thymeleaf.org">
 						</span>
 						<span>Cancelar</span>
 					</a>
-					<button onclick="temCertezaDialog();return(false)" type="submit" class="button is-success is-medium">
+					<button onclick="temCertezaDialog();return(false)" class="button is-success is-medium">
 						<span class="icon">
 							<i class="fas fa-save"></i>
 						</span>
@@ -153,13 +153,6 @@ xmlns:th="http://www.thymeleaf.org">
 					}
 				});
 			}
-		}
-
-		var btnClose = document.getElementById("erroBtnDelete");
-		if (btnClose != null) {
-			btnClose.addEventListener("click", function() {
-				document.getElementById("erroDiv").style.display = "none";
-			});
 		}
 	</script>
 </body>

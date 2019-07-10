@@ -3,7 +3,9 @@ package br.edu.ifpe.missao06.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import br.edu.ifpe.missao06.DAO.CargoDAO;
@@ -17,6 +19,19 @@ public class CargoService {
 	private CargoDAO cargoRep;
 
 	/* ## FINDS ## */
+	public List<Cargo> findAll() {
+		return this.cargoRep.findAll(Sort.by("nome"));
+	}
+	
+	public List<Cargo> findAllActive() {
+		Cargo cargoExample = new Cargo();
+		cargoExample.setSituacao(true);
+
+		Example<Cargo> example = Example.of(cargoExample);
+		
+		return this.cargoRep.findAll(example, Sort.by("nome"));
+	}
+	
 	public Cargo findById(Integer id) {
 		return this.cargoRep.getById(id);
 	}

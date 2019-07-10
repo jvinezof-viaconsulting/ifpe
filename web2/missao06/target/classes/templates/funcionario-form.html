@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+xmlns:th="http://www.thymeleaf.org">
+<head>
+	<!-- HEAD BASICO -->
+	<thymeleaf th:replace="fragments/head :: basico"></thymeleaf>
+	
+	<!-- FONTS -->
+	<thymeleaf th:replace="fragments/head :: fonts"></thymeleaf>
+
+	
+	<!-- CSS GERAL -->
+	<thymeleaf th:replace="fragments/head :: css"></thymeleaf>
+
+	<!-- CONFIGURAÇÕES ESPECIFICAS -->	
+	<title th:text="${ (funcionario.id != null) ? 'Editar Funcionário' : 'Novo Funcionário' }"></title>
+
+	<style>
+		html, body {
+			min-height: 100vh;
+		}
+
+		.cem {
+			min-height: 100%;
+		}
+
+		.select, select {
+			width: 100%;
+			text-align: center;
+		}
+
+		.btns {
+			margin-top: 20px;
+			text-align: center;
+		}
+
+		.pre-footer {
+			padding-top: 5%;
+		}
+
+		footer {
+			position: relative;
+			bottom: 0;
+			left: 0;
+			width: 100%;
+			padding-top: 0 !important;
+		}
+	</style>
+</head>
+<body onload="verificarListas();">
+	<main th:insert="fragments/hero :: small(${(funcionario.id != null) ? 'Editar Funcionário' : 'Novo Funcionário'})"></main>
+
+	<div class="container cem">
+		<nav class="breadcrumb has-bullet-separator is-right" aria-label="breadcrumbs">
+			<ul>
+				<li><a th:href="@{/}"> <span class="icon">
+					<i class="fas fa-home" aria-hidden="true"></i>
+				</span> <span>Gestão de Pessoas</span>
+			</a></li>
+			<li>
+				<a th:href="@{/funcionario/listar}">Funcionarios</a>
+			</li>
+			<li class="is-active">
+				<a href="#" th:text="${ (editar != null) ? 'Editar' : 'Novo' }"></a></li>
+			</ul>
+		</nav> <!-- /.breadcrumb -->
+		
+		<section>
+			<form id="form-func" th:action="@{${ (editar != null) ? '/funcionario/salvar' : '/funcionario/novo'}}" th:object="${funcionario}" method="post">
+				<!-- Erros -->
+				<div id="erroDiv" th:if="${mensagemErro != null || errors != null}">
+					<article class="message is-danger">
+						<div class="message-header">
+							<p>Erro!</p>
+							<a class="delete" aria-label="delete" id="erroBtnDelete"></a>
+						</div>
+						<div class="message-body">
+							<!-- VARIAVEL MENSAGEM ERRO -->
+							<div th:if="${mensagemErro != null}" th:text="${mensagemErro}"></div>
+
+							<!-- VARIAVEL BR -->
+							<div th:if="${errors != null}">
+								<p th:each="err : ${errors}" th:text="${err.defaultMessage}"></p>
+							</div>
+						</div>
+					</article> <!-- /.message -->
+				</div> <!-- /#erroDiv -->
+
+				<!-- INPUT HIDDEN -->
+				<input type="hidden" th:field="*{id}">
+
+				<!-- INPUTS -->
+				<div class="columns">
+					<div class="column">
+						<div class="field">
+							<div class="control">
+								<label for="matricula">Matricula</label>
+								<input class="input is-medium" type="text" th:field="*{matricula}" placeholder="N. da Matricula">
+							</div>
+						</div> <!-- /.field (Matricula) -->
+					</div> <!-- /.column -->
+					<div class="column is-four-fifths">
+						<div class="field">
+							<div class="control">
+								<label for="nome">Nome</label>
+								<input class="input is-medium" type="text" th:field="*{nome}" placeholder="Digite o nome do funcionário">
+							</div>
+						</div> <!-- /.field (Nome) -->
+					</div> <!-- /.column -->
+				</div> <!-- /.columns -->
+				<div class="columns">
+					<div class="column">
+						<div class="field">
+							<div class="control">
+								<label for="cpf">CPF</label>
+								<input class="input is-medium" type="text" th:field="*{cpf}" placeholder="xxx.xxx.xxx-xx">
+							</div>
+						</div> <!-- /.field (CPF) -->
+					</div> <!-- /.column -->
+					<div class="column">
+						<div class="field">
+							<div class="control">
+								<label for="dataNascimento">Date de Nascimento</label>
+								<input class="input is-medium" type="date" th:field="*{dataNascimento}" placeholder="dd/mm/yyyy">
+							</div>
+						</div> <!-- /.field (Data de Nascimento) -->
+					</div> <!-- /.column -->
+				</div> <!-- /.columns -->
+				<div class="columns">
+					<div class="column">
+						<div class="field">
+							<label for="cargo">Cargo do Funcionário</label>
+							<div class="control has-icons-left">
+								<div class="select is-medium">
+									<select th:field="*{cargo}">
+										<option th:each="cargo : ${cargos}" th:value="${cargo.id}" th:text="${cargo.nome}"></option>
+									</select>
+								</div>
+								<span class="icon is-medium is-left">
+									<i class="fas fa-coffee"></i>
+								</span>
+							</div>
+						</div> <!-- /.field (Cargos) -->
+					</div> <!-- /.column -->
+					<div class="column">
+						<div class="field">
+							<label for="empresa">Empresa do Funcionário</label>
+							<div class="control has-icons-left">
+								<div class="select is-medium">
+									<select th:field="*{empresa}">
+										<option th:each="empresa : ${empresas}" th:value="${empresa.id}" th:text="${empresa.nome}"></option>
+									</select>
+								</div>
+								<span class="icon is-medium is-left">
+									<i class="fas fa-globe"></i>
+								</span>
+							</div>
+						</div> <!-- /.field (Empresas) -->
+					</div> <!-- /.column -->
+				</div> <!-- /.columns -->
+
+				<div class="btns has-text-center">
+					<a class="button is-danger is-medium" th:href="@{/funcionario/listar}">
+						<span class="icon">
+							<i class="fas fa-times"></i>
+						</span>
+						<span>Cancelar</span>
+					</a>
+					<button class="button is-success is-medium" onclick="temCertezaDialog();return(false)">
+						<span class="icon">
+							<i class="fas fa-save"></i>
+						</span>
+						<span th:text="${ (funcionario.id != null) ? 'Salvar' : 'Criar Funcionário' }"></span>
+					</button>
+				</div>
+			</form> <!-- /#form-func -->
+		</section> <!-- /section -->
+
+		<div class="pre-footer">
+			<!-- Footer -->
+		<footer th:replace="fragments/footer :: footer"></footer>
+		</div>
+	</div> <!-- /.container -->
+
+	<!-- Scripts -->
+	<script th:replace="fragments/scripts :: sweetalert2"></script>
+
+	<script type="text/javascript">
+		function emptyAlert(entidade) {
+			Swal.fire({
+				type: 'error',
+				title: 'Oops...',
+				text: 'Entidade ' + entidade + ' sem dados para seleção',
+				confirmButtonText: 'Criar ' + entidade,
+				confirmButtonColor: 'hsl(141, 71%, 48%)',
+				showCancelButton: true,
+				cancelButtonText: 'Listar ' + entidade + 's',
+				cancelButtonColor: 'hsl(48, 100%, 67%)',
+				allowOutsideClick: false,
+				allowEscapeKey: false
+			}).then((result) => {
+				if (result.value) {
+					window.location = "/" + entidade.toLowerCase() + ((entidade.slice(-1) == "a") ? '/nova' : '/novo');
+				} else {
+					window.location = "/" + entidade.toLowerCase() + '/listar';
+				}
+			});
+		}
+
+		function verificarListas() {
+			var cargos = "[[${cargos.size()}]]";
+			var empresas = "[[${empresas.size()}]]";
+
+			if (cargos == 0) {
+				emptyAlert("Cargo");
+			} else if (empresas == 0) {
+				emptyAlert("Empresa");
+			}
+		}
+	</script>
+</body>
+</html>
