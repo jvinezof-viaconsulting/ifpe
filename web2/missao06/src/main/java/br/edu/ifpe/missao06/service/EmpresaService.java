@@ -47,6 +47,12 @@ public class EmpresaService {
 	public List<Empresa> filterByNomeNomeCurto(String filtro) {
 		return this.empresaRep.filterByNomeNomeCurto(filtro);
 	}
+	
+	/* ## EXISTS ## */
+	public boolean existeDependencia(Empresa empresa) {
+		Example<Empresa> exemplo = Example.of(empresa); 
+		return this.empresaRep.exists(exemplo);
+	}
 
 	/* ## SAVE ## */
 	public void save(Empresa empresa) throws ServiceException {

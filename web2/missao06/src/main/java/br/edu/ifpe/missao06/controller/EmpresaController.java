@@ -22,6 +22,7 @@ import org.springframework.web.servlet.support.RequestContextUtils;
 
 import br.edu.ifpe.missao06.model.Empresa;
 import br.edu.ifpe.missao06.service.EmpresaService;
+import br.edu.ifpe.missao06.service.FuncionarioService;
 
 @Controller
 @RequestMapping("/empresa")
@@ -29,6 +30,9 @@ public class EmpresaController {
 
 	@Autowired
 	private EmpresaService empresaService;
+	
+	@Autowired
+	private FuncionarioService funcionarioService;
 
 	/*
 	 * LISTAR EMPRESAS
@@ -174,8 +178,10 @@ public class EmpresaController {
 
 		Empresa empresa = this.empresaService.findById(id);
 		if (empresa != null) {
-			this.empresaService.deleteById(id);
-			ra.addFlashAttribute("alertSucesso", "Empresa [" + empresa.getNome() + "] excluida com sucesso");
+			if (!this.funcionarioService.existsByEmpresa(empresa)) {
+				this.empresaService.deleteById(id);
+				ra.addFlashAttribute("alertSucesso", "Empresa [" + empresa.getNome() + "] excluida com sucesso");
+			}
 		} else {
 			ra.addFlashAttribute("alertErro", "Você tentou excluir uma Empresa invalida");
 		}

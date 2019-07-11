@@ -12,7 +12,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Past;
 import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.br.CPF;
@@ -20,33 +19,40 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
 public class Funcionario {
-	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "funcionario_id")
 	private Integer id;
 
-	@NotBlank(message = "Informe a matricula") @Size(max = 8, message = "Matricula não pode ter mais de 8 caracteres")
+	@NotBlank(message = "Informe a matricula")
+	@Size(max = 8, message = "Matricula não pode ter mais de 8 caracteres")
 	@Column(name = "funcionario_matricula", length = 8, nullable = false)
 	private String matricula;
 
-	@NotBlank(message = "Informe o nome") @Size(max = 70, message = "Nome não pode ter mais de 70 caracteres")
+	@NotBlank(message = "Informe o nome")
+	@Size(max = 70, message = "Nome não pode ter mais de 70 caracteres")
 	@Column(name = "funcionario_nome", length = 70, nullable = false)
 	private String nome;
 
-	@NotBlank(message = "Informe o cpf") @Size(max = 11, message = "CPF não pode ter mais de 11 caracteres")
+	@NotBlank(message = "Informe o cpf")
+	@Size(max = 11, message = "CPF não pode ter mais de 11 caracteres")
 	@CPF
 	@Column(name = "funcionario_cpf", length = 11, nullable = false, unique = true)
 	private String cpf;
 
-	@DateTimeFormat(pattern = "dd/MM/yyyy") @Past(message = "Data de nascimento informada inválida")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+//	@Past
 	@Column(name = "funcionario_data_nascimento")
 	private LocalDate dataNascimento;
 
 	@NotNull
-	@ManyToOne @JoinColumn(name = "funcionario_cargo")
+	@ManyToOne
+	@JoinColumn(name = "funcionario_cargo")
 	private Cargo cargo;
 
 	@NotNull
-	@OneToOne @JoinColumn(name = "funcionario_empresa")
+	@OneToOne
+	@JoinColumn(name = "funcionario_empresa")
 	private Empresa empresa;
 
 	public Integer getId() {

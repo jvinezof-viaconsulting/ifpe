@@ -37,6 +37,18 @@ public class FuncionarioController {
 	private EmpresaService empresaService;
 
 	/*
+	 * LISTAR FUNCIONARIOS
+	 */
+	@GetMapping({ "", "/", "/listar" })
+	public ModelAndView listarEmpresas() {
+		ModelAndView mv = new ModelAndView("/funcionario-list");
+		mv.addObject("funcionarios", this.funcionarioService.findByNomeTop10());
+		mv.addObject("naoListados", this.funcionarioService.naoListadosPorNomeTop10());
+
+		return mv;
+	}
+
+	/*
 	 * SALVAR FUNCIONARIOS
 	 */
 	@GetMapping("/novo")
@@ -56,9 +68,10 @@ public class FuncionarioController {
 
 		return mv;
 	}
-	
+
 	@PostMapping("/novo")
-	public String salvarFuncionario(@Valid @ModelAttribute Funcionario funcionario, Errors errors, BindingResult br, RedirectAttributes ra) {
+	public String salvarFuncionario(@Valid @ModelAttribute Funcionario funcionario, Errors errors, BindingResult br,
+			RedirectAttributes ra) {
 		String redirect;
 		Integer id = null;
 		if (funcionario.getId() != null) {
@@ -69,7 +82,7 @@ public class FuncionarioController {
 			redirect = "redirect:/funcionario/novo";
 			ra.addFlashAttribute("alertSucesso", "Funcionário [" + funcionario.getNome() + "] criado com sucesso!");
 		}
-		
+
 		if (errors.hasErrors()) {
 			ra.addFlashAttribute("errors", errors.getFieldErrors());
 			ra.addFlashAttribute("funcionario", funcionario);
@@ -85,7 +98,7 @@ public class FuncionarioController {
 				} else {
 					this.funcionarioService.save(funcionario);
 				}
-				
+
 				return "redirect:/funcionario/listar";
 			} catch (ServiceException e) {
 				ra.addFlashAttribute("mesagemErro", "Não foi possível salvar o funcinário: " + e.getMessage());
@@ -94,7 +107,7 @@ public class FuncionarioController {
 				ra.addFlashAttribute("empresas", this.empresaService.findAllActive());
 			}
 		}
-		
+
 		return redirect;
 	}
 }
